@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
+		<version>2.5.6</version>
 		<relativePath/>
 	</parent>
 	<groupId>pl.piomin.samples</groupId>
@@ -16,8 +16,37 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.3.71</kotlin.version>
+		<kotlin.version>1.5.32</kotlin.version>
+		<spring-cloud.version>2020.0.4</spring-cloud.version>
 	</properties>
+
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<exclusions>
+					<!-- TODO: Should be removed with next version
+					 Excluded due to a bug in binder-kafka-streams function initialization.
+					 Tries to initialize simple binder functions(consumers, suppliers) for kafka as kstream functions,
+					 when both (Kafka and Kafka Streams) are used with the functional programming model.
+					 Problematic commit:
+					 https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/commit/5454d54faf927bb23dfa3132fa1a3d91acdf7ed0
+					 -->
+					<exclusion>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-stream-binder-kafka-streams</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<dependencies>
 		<dependency>
@@ -34,7 +63,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib</artifactId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
